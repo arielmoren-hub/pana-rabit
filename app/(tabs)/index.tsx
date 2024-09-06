@@ -1,70 +1,76 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image,Button, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+
+import './../../firebaseConfig'; // Importa Firebase
+
+import { getDatabase,get,child, ref, set } from "firebase/database";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const database = getDatabase();
+const auth = getAuth();
+const dbRef = ref(database);
+
+
+
+function writeUserData() {
+  console.log("pasamos por real time database")
+  const db = getDatabase();
+  set(ref(db, 'users/' + "3"), {
+    username: "larry1",
+    email: "test1@test.com.ar",
+  });
+}
+
+function readUserData(userId: string) {
+
+  get(child(dbRef, `users`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      console.log(snapshot.val());
+      snapshot.val().map((task: any) => {
+        console.log(task)
+      });
+    } else {
+      console.log("No data available");
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+}
+
+function createUser(email: string, password: string) {
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+
+      console.log("esto anda usuarios")
+      const user = userCredential.user;
+    })
+    .catch((error) => {
+      console.log(error, "<-este ya es el error")
+
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
+};
+
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+    <View >
+      <ScrollView>
+        <View >
+          
+          <Button title='c' />
+          <Button title='c' />
+          <Button title='c' />
+          <Button title='c' />
+          <Button title='cargar real time database' onPress={() => { writeUserData() }} />
+          <Button title='crear usuarios' onPress={() => { createUser("test3@test.com", "Larry1234") }} />
+          <Button title='leer datos' onPress={() => { readUserData("1") }} />
+        </View>
+      </ScrollView>
+    </View>
+
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
