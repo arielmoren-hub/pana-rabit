@@ -8,10 +8,20 @@
       ]
     }
   },
+  
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "global.d.ts", "app/**/*"
   ]
 }
+
+// {
+//   "compilerOptions": {
+//     "strict": true, // o cualquier configuración que estés utilizando
+//   },
+//   "include": []
+// }
+
