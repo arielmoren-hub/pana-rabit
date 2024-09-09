@@ -1,76 +1,54 @@
-import { Image,Button, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
-
-import './../../firebaseConfig'; // Importa Firebase
-
-import { getDatabase,get,child, ref, set } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
-const database = getDatabase();
-const auth = getAuth();
-const dbRef = ref(database);
-
-
-
-function writeUserData() {
-  console.log("pasamos por real time database")
-  const db = getDatabase();
-  set(ref(db, 'users/' + "3"), {
-    username: "larry1",
-    email: "test1@test.com.ar",
-  });
-}
-
-function readUserData(userId: string) {
-
-  get(child(dbRef, `users`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      console.log(snapshot.val());
-      snapshot.val().map((task: any) => {
-        console.log(task)
-      });
-    } else {
-      console.log("No data available");
-    }
-  }).catch((error) => {
-    console.error(error);
-  });
-}
-
-function createUser(email: string, password: string) {
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-
-      console.log("esto anda usuarios")
-      const user = userCredential.user;
-    })
-    .catch((error) => {
-      console.log(error, "<-este ya es el error")
-
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-};
-
+import { useState } from 'react';
+import { Text, View, Button, TouchableOpacity } from 'react-native';
 
 export default function HomeScreen() {
+  const [talle, settalle] = useState(45)
+  const [cantn, setCantn] = useState(0)
+  const [cantb, setCantb] = useState(0)
+  const [cantv, setCantv] = useState(0)
+  const [canta, setCanta] = useState(0)
+
   return (
-
-    <View >
-      <ScrollView>
-        <View >
-          
-          <Button title='c' />
-          <Button title='c' />
-          <Button title='c' />
-          <Button title='c' />
-          <Button title='cargar real time database' onPress={() => { writeUserData() }} />
-          <Button title='crear usuarios' onPress={() => { createUser("test3@test.com", "Larry1234") }} />
-          <Button title='leer datos' onPress={() => { readUserData("1") }} />
+    <>
+      <View className='flex-1 items-center justify-center bg-slate-600'>
+        <View>
+          <View className=' flex flex-row p-2 items-center'>
+            <TouchableOpacity onPress={() => { settalle(talle < 45 ? talle + 1 : 45) }}><Text className='text-5xl p-1 bg-slate-50'> + </Text></TouchableOpacity>
+            <Text className='text-5xl p-2'>{talle}</Text>
+            <TouchableOpacity onPress={() => { settalle(talle > 34 ? talle - 1 : 34) }}><Text className='text-5xl p-1 bg-slate-50'> - </Text></TouchableOpacity>
+          </View>
         </View>
-      </ScrollView>
-    </View>
+        <View className='flex flex-row'>
+          <View className='p-2 items-center'>
+            <TouchableOpacity onPress={() => { setCantn(cantn + 1) }}><Text className='text-5xl p-1 bg-slate-50'>+</Text></TouchableOpacity>
+            <Text className='text-5xl'>{cantn}</Text>
+            <TouchableOpacity onPress={() => { setCantn(cantn > 0 ? cantn - 1 : 0) }}><Text className='text-5xl p-1 bg-slate-50'>-</Text></TouchableOpacity>
+          </View>
+          <View className='p-2 items-center'>
+            <TouchableOpacity onPress={() => { setCantb(cantb + 1) }}><Text className='text-5xl p-1 bg-slate-50'>+</Text></TouchableOpacity>
+            <Text className='text-5xl'>{cantb}</Text>
+            <TouchableOpacity onPress={() => { setCantb(cantb > 0 ? cantb - 1 : 0) }}><Text className='text-5xl p-1 bg-slate-50'>-</Text></TouchableOpacity>
+          </View>
+          <View className='p-2 items-center'>
+            <TouchableOpacity onPress={() => { setCantv(cantv + 1) }}><Text className='text-5xl p-1 bg-slate-50'>+</Text></TouchableOpacity>
+            <Text className='text-5xl'>{cantv}</Text>
+            <TouchableOpacity onPress={() => { setCantv(cantv > 0 ? cantv - 1 : 0) }}><Text className='text-5xl p-1 bg-slate-50'>-</Text></TouchableOpacity>
+          </View>
+          <View className='p-2 items-center'>
+            <TouchableOpacity onPress={() => { setCanta(canta + 1) }}><Text className='text-5xl p-1 bg-slate-50'>+</Text></TouchableOpacity>
+            <Text className='text-5xl'>{canta}</Text>
+            <TouchableOpacity onPress={() => { setCanta(canta > 0 ? canta - 1 : 0) }}><Text className='text-5xl w-full p-1 bg-slate-50'>-</Text></TouchableOpacity>
+          </View>
+        </View>
+        <View >
+          <TouchableOpacity>
+            <Text className='text-2xl'>guardar</Text>
+          </TouchableOpacity>
+        </View>
 
+      </View>
+
+    </>
   );
 }
+
