@@ -3,12 +3,11 @@ import { useState } from 'react';
 import { Text, View, Button, TouchableOpacity } from 'react-native';
 
 
-
 function save(alpargata: Alpargata) {
-  
+
 }
 
-export default function HomeScreen() {
+export default function MenuScreen() {
   const [colores, setColores] = useState<string[]>([
     'red',
     'green',
